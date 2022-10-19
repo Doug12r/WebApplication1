@@ -1,0 +1,17 @@
+CREATE SCHEMA TEST
+
+CREATE TABLE TEST.Donor
+(
+DonorID INT IDentity(100,1) Primary Key,
+FirstName Varchar(50)Null ,
+LastName Varchar(50)Null ,
+Addres varchar(50)Null ,
+PhoneNum INT ,
+Gender Char(1)Null,
+Zip numeric(5,0)Null,
+CITY VARCHAR(50)Null,
+FlexPass Date Null,
+DonorAmt money Null
+)
+
+dROP TABLE TEST.Donor
