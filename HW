@@ -1,0 +1,41 @@
+USE Douglas_Williams
+
+Create schema LabAssignment2
+
+Create table LabAssignment2.Doctor
+(
+DoctorID Int Identity(10000,1) Primary Key not null ,
+LicenceNo int unique not null,
+Statel varchar(50) unique not null,
+DoctorName varchar(50) not null,
+DoctorYearOfGraduation date not null Check(DoctorYearOfGraduation > '1985')
+)
+
+
+Drop table Labassignment2.Doctor
+
+ Insert Into LabAssignment2.Doctor VALUES
+ (103015,'Chicago','Robert Jennings','1986')
+
+  Insert Into LabAssignment2.Doctor VALUES
+ (103016,'Louisville','Rob Jenn','1989')
+
+  Insert Into LabAssignment2.Doctor VALUES
+ (103017,'Denver','bert Jengs','1988')
+
+  Insert Into LabAssignment2.Doctor VALUES
+ (103018,'Minnisota','Roert Jngs','1987')
+
+ Create Table LabAssignment2.Book
+(
+ISBN numeric Primary key not null,
+Price money not null,
+Datte Date not null,
+Title varchar (100) not null
+)
+
+Create table LabAssignment2.Publisher
+(
+PublisherID Varchar(50) primary key not null,
+publishername varchar(50) not null,
+)
