@@ -1,0 +1,35 @@
+Public Class Form1
+    Dim Numbers(99) As Integer
+    Dim count As Integer
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        If count >= 100 Then
+            MsgBox("Array is full", vbExclamation, "Error")
+        End If
+        Dim n As Integer = CInt(TextBox1.Text)
+        Numbers(count) = n
+        count += 1
+        TextBox1.Clear()
+        TextBox1.Focus()
+
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim even, odd As Integer
+
+        For i As Integer = 0 To count - 1
+            If Numbers(i) Mod 2 = 0 Then
+                even += 1
+            Else
+                odd += 1
+            End If
+        Next
+        ListBox1.Items.Add("Even:  " & even)
+        ListBox1.Items.Add("Odd:   " & odd)
+    End Sub
+End Class
