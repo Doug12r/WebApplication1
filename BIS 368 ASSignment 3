@@ -2,7 +2,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Public Class WebForm1
     Inherits System.Web.UI.Page
-    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=YourULID;Trusted_Connection=Yes;"
+    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=dewill2;Trusted_Connection=Yes;"
     Public Shared con As SqlConnection = New SqlConnection(conS)
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -45,7 +45,7 @@ Public Class WebForm1
 
         d = Calendar1.SelectedDate
 
-        Dim CMDupdate As New SqlCommand("Update Orders2022 set OrderDate = @p1 Where CustomerID = @p2", con)
+        Dim CMDupdate As New SqlCommand("Update Orders2022 set OrderDate = @p1 Where OrderID = @p2", con)
         With CMDupdate.Parameters
             .Clear()
             .AddWithValue("@P1", Calendar1.SelectedDate)
@@ -60,7 +60,7 @@ Public Class WebForm1
             Response.Write(ex.Message)
             con.Close()
         End Try
-        Dim DA As New SqlDataAdapter("Select * From Orders2022 Where CustomerID = @p1", con)
+        Dim DA As New SqlDataAdapter("Select * From Orders2022 Where OrderID = @p1", con)
         Dim Dt As New DataTable
         With DA.SelectCommand.Parameters
             .Clear()
