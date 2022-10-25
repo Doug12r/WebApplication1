@@ -1,0 +1,37 @@
+Imports System.Data
+Imports System.Data.SqlClient
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=dewill2;Trusted_Connection=Yes;"
+
+    Public Shared con As SqlConnection = New SqlConnection(conS)
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+    End Sub
+
+    Protected Sub DropDownList1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DropDownList1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub WebForm1_Init(sender As Object, e As EventArgs) Handles Me.Init
+
+        Dim Da As New SqlDataAdapter("Select CustomerID, CustomerName from Customers2022", con)
+        Dim DT As New DataTable
+        Try
+            Da.Fill(DT)
+            With DropDownList1
+                .DataSource = DT
+                .DataValueField = "CustomerID"
+                .DataTextField = "CustomerName"
+                .DataBind()
+                .Items.Insert(0, "Select a Customer")
+            End With
+            Response.Write()
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+End Class
