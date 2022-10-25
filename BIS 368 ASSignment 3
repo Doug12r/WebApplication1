@@ -1,0 +1,78 @@
+Imports System.Data
+Imports System.Data.SqlClient
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=YourULID;Trusted_Connection=Yes;"
+    Public Shared con As SqlConnection = New SqlConnection(conS)
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+    End Sub
+
+    Protected Sub DropDownList1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DropDownList1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub DropDownList1_Load(sender As Object, e As EventArgs) Handles DropDownList1.Load
+
+    End Sub
+
+    Private Sub DropDownList1_Init(sender As Object, e As EventArgs) Handles DropDownList1.Init
+
+    End Sub
+
+    Private Sub WebForm1_Init(sender As Object, e As EventArgs) Handles Me.Init
+        Dim DA As New SqlDataAdapter("Select OrderID, CustomerName From Orders2022", con)
+        Dim DT As New DataTable
+
+        Try
+            If DT.Rows.Count > 0 Then DT.Rows.Clear()
+            DA.Fill(DT)
+            With DropDownList1
+                .DataSource = DT
+                .DataTextField = "CustomerName"
+                .DataValueField = "OrderID"
+                .DataBind()
+                .Items.Insert(0, "Please select a customer ")
+            End With
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
+
+    Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim d As Date
+
+        d = Calendar1.SelectedDate
+
+        Dim CMDupdate As New SqlCommand("Update Orders2022 set OrderDate = @p1 Where CustomerID = @p2", con)
+        With CMDupdate.Parameters
+            .Clear()
+            .AddWithValue("@P1", Calendar1.SelectedDate)
+            .AddWithValue("@p2", DropDownList1.SelectedValue)
+
+        End With
+        Try
+            If con.State = ConnectionState.Closed Then con.Open()
+            CMDupdate.ExecuteNonQuery()
+            Response.Write("Date Updated")
+        Catch ex As Exception
+            Response.Write(ex.Message)
+            con.Close()
+        End Try
+        Dim DA As New SqlDataAdapter("Select * From Orders2022 Where CustomerID = @p1", con)
+        Dim Dt As New DataTable
+        With DA.SelectCommand.Parameters
+            .Clear()
+            .AddWithValue("@p1", DropDownList1.SelectedValue)
+
+            Try
+                DA.Fill(Dt)
+                GridView1.DataSource = Dt
+                GridView1.DataBind()
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+        End With
+    End Sub
+End Class
