@@ -1,0 +1,48 @@
+Imports System.Data
+Imports System.Data.SqlClient
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=dewill2;Trusted_Connection=Yes;"
+
+    Public Shared con As SqlConnection = New SqlConnection(conS)
+
+
+    Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim Name, Address, City, State, Zip, Phone, Email As String
+
+        Name = TextBox1.Text
+        Address = TextBox2.Text
+        City = TextBox3.Text
+        State = TextBox4.Text
+        Zip = TextBox5.Text
+        Phone = TextBox6.Text
+        Email = TextBox7.Text
+
+        Dim cmdInsert As New SqlCommand("Insert Into [Customer20222] (CustomerName, Address, City, State, Zip,PhoneNumber,Email, NumberSales, TotalSales) Values (@p1, @p2, @p3, @p4, @p5,@p6,@p7, 0, 0)", con)
+
+        With cmdInsert.Parameters
+            .Clear()
+            .AddWithValue("@p1", Name)
+            .AddWithValue("@p2", Address)
+            .AddWithValue("@p3", City)
+            .AddWithValue("@p4", State)
+            .AddWithValue("@p5", Zip)
+            .AddWithValue("@p6", Phone)
+            .AddWithValue("@p7", Email)
+
+        End With
+
+        Try
+            If con.State = ConnectionState.Closed Then con.Open()
+            cmdInsert.ExecuteNonQuery()
+            Response.Write("New Customer Added")
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        Finally
+            con.Close()
+        End Try
+    End Sub
+End Class
