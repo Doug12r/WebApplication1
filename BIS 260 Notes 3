@@ -1,0 +1,33 @@
+Public Class Form1
+    Dim a(99) As Integer
+    Dim count As Integer
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim temp As Integer
+        For i As Integer = 0 To count - 1
+            For j As Integer = i + 1 To count - 1
+                If a(j) < a(i) Then
+                    temp = a(i)
+                    a(i) = a(j)
+                    a(j) = temp
+
+                End If
+            Next
+            TextBox1.Text &= a(i) & " "
+        Next
+
+
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+
+        If count >= 100 Then
+            MsgBox("Array is full", vbExclamation, "Error")
+            Exit Sub
+        End If
+        Dim n As Integer
+        n = InputBox("Enter A Number")
+        a(count) = n
+        count += 1
+        TextBox1.Text = Nothing
+    End Sub
+End Class
