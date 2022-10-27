@@ -1,0 +1,12 @@
+Public Class Form2
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim strArray() As String = IO.File.ReadAllLines("Digits")
+        Dim Digits(strArray.Count - 1) As Integer
+
+        For i As Integer = 0 To strArray.Count - 1
+            Digits(i) = CInt(strArray(i))
+        Next
+
+    End Sub
+End Class
