@@ -12,12 +12,34 @@ Public Class WebForm1
     End Sub
 
     Protected Sub DropDownList1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DropDownList1.SelectedIndexChanged
+        Dim Da As New SqlDataAdapter("Select * From Customer20222 Where CustomerID = @p1", con)
 
+        Dim Dt As New DataTable
+        With Da.SelectCommand.Parameters
+            .Clear()
+            .AddWithValue("@p1", DropDownList1.SelectedValue)
+
+        End With
+        Try
+            Da.Fill(Dt)
+
+            With Dt.Rows(0)
+                TextBox1.Text = .Item("CustomerName")
+                TextBox2.Text = .Item("Address")
+                TextBox3.Text = .Item("City")
+                TextBox4.Text = .Item("State")
+                TextBox5.Text = .Item("Zip")
+                TextBox6.Text = .Item("PhoneNumber")
+                TextBox7.Text = .Item("Email")
+            End With
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
     End Sub
 
     Private Sub WebForm1_Init(sender As Object, e As EventArgs) Handles Me.Init
 
-        Dim Da As New SqlDataAdapter("Select CustomerID, CustomerName from Customers2022", con)
+        Dim Da As New SqlDataAdapter("Select CustomerID, CustomerName from Customer20222", con)
         Dim DT As New DataTable
         Try
             Da.Fill(DT)
@@ -28,9 +50,9 @@ Public Class WebForm1
                 .DataBind()
                 .Items.Insert(0, "Select a Customer")
             End With
-            Response.Write()
-        Catch ex As Exception
 
+        Catch ex As Exception
+            Response.Write(ex.Message)
         End Try
 
     End Sub
