@@ -39,6 +39,34 @@ Public Class WebForm1
 
     Private Sub WebForm1_Init(sender As Object, e As EventArgs) Handles Me.Init
 
+        populateDDL()
+
+    End Sub
+
+    Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim cmdUpdate As New SqlCommand("Update Customer20222 Set CustomerName = @p1, Address = @p2, City = @p3, State = @p4, Zip = @p5, PhoneNumber = @p6, Email = @p7 Where CustomerID = @p8", con)
+        With cmdUpdate.Parameters
+            .Clear()
+            .AddWithValue("@p1", TextBox1.Text)
+            .AddWithValue("@p2", TextBox2.Text)
+            .AddWithValue("@p3", TextBox3.Text)
+            .AddWithValue("@p4", TextBox4.Text)
+            .AddWithValue("@p5", TextBox5.Text)
+            .AddWithValue("@p6", TextBox6.Text)
+            .AddWithValue("@p7", TextBox7.Text)
+            .AddWithValue("@p8", DropDownList1.SelectedValue)
+        End With
+
+        Try
+            If con.State = ConnectionState.Closed Then con.Open()
+            cmdUpdate.ExecuteNonQuery()
+            Response.Write("Record Updated")
+        Catch ex As Exception
+
+            Response.Write(ex.Message)
+
+        End Try
+
         Dim Da As New SqlDataAdapter("Select CustomerID, CustomerName from Customer20222", con)
         Dim DT As New DataTable
         Try
@@ -55,5 +83,26 @@ Public Class WebForm1
             Response.Write(ex.Message)
         End Try
 
+
+        populateDDL()
+
+
+    End Sub
+    Sub populateDDL()
+        Dim Da As New SqlDataAdapter("Select CustomerID, CustomerName from Customer20222", con)
+        Dim DT As New DataTable
+        Try
+            Da.Fill(DT)
+            With DropDownList1
+                .DataSource = DT
+                .DataValueField = "CustomerID"
+                .DataTextField = "CustomerName"
+                .DataBind()
+                .Items.Insert(0, "Select a Customer")
+            End With
+
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
     End Sub
 End Class
