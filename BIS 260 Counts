@@ -1,0 +1,25 @@
+Public Class Form1
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim strArray() As String = IO.File.ReadAllLines("Digits.txt")
+
+        Dim Digits(strArray.Count - 1) As Integer
+
+        For i As Integer = 0 To strArray.Count - 1
+            Digits(i) = CInt(strArray(i))
+        Next
+
+        Dim Frequncies(9) As Integer
+
+        For i As Integer = 0 To Digits.Count - 1
+            For j As Integer = 0 To 9
+                If Digits(i) = j Then Frequncies(j) += 1
+            Next
+        Next
+
+        For i As Integer = 0 To 9
+            ListBox1.Items.Add(i & ": " & Frequncies(i) & " times")
+        Next
+
+    End Sub
+End Class
