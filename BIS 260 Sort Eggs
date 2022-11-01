@@ -1,0 +1,35 @@
+Public Class Form1
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim strArray() As String = IO.File.ReadAllLines("Eggs")
+
+        Dim Weight(strArray.Count - 1) As Decimal
+
+        For i As Integer = 0 To strArray.Count - 1
+            Weight(i) = CInt(strArray(i))
+        Next
+
+        Dim J, XL, L, M, S, D As Integer
+        For i As Integer = 0 To Weight.Count - 1
+            If Weight(i) >= 2.5 Then
+                J += 1
+            ElseIf Weight(i) >= 2.25 Then
+                XL += 1
+            ElseIf Weight(i) >= 2 Then
+                L += 1
+            ElseIf Weight(i) >= 1.75 Then
+                M += 1
+            ElseIf Weight(i) >= 1.5 Then
+                S += 1
+            Else
+                D += 1
+            End If
+        Next
+
+        ListBox1.Items.Add("Jumbo:  " & vbTab & J)
+        ListBox1.Items.Add("X-Large:  " & vbTab & XL)
+        ListBox1.Items.Add("Large:  " & vbTab & L)
+        ListBox1.Items.Add("Medium:  " & vbTab & M)
+        ListBox1.Items.Add("Small:  " & vbTab & S)
+        ListBox1.Items.Add("Discarded:  " & vbTab & D)
+    End Sub
+End Class
