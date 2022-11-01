@@ -1,0 +1,147 @@
+Imports System.Data
+Imports System.Data.SqlClient
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Public Shared conS As String = "Server=COBBISSQL01\BISDEPT;Database=dewill2;Trusted_Connection=Yes;"
+
+    Public Shared con As SqlConnection = New SqlConnection(conS)
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+    End Sub
+
+    Protected Sub DropDownList1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DropDownList1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub DropDownList1_Init(sender As Object, e As EventArgs) Handles DropDownList1.Init
+
+        Dim Da As New SqlDataAdapter("Select CustomerID,CustomerName From Customer20222", con)
+        Dim Dt As New DataTable
+
+
+        Try
+            Da.Fill(Dt)
+            With DropDownList1
+                .DataSource = Dt
+                .DataTextField = "CustomerName"
+                .DataValueField = "CustomerID"
+                .DataBind()
+
+            End With
+        Catch ex As Exception
+            Response.Write(ex.Message)
+        End Try
+
+    End Sub
+
+    Protected Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        Dim cmdTotalSales As New SqlCommand("Select TotalSales From Customer20222 Where CustomerID = @p1", con)
+        Dim TotalSales As Decimal
+        Dim Rank As Integer
+        Dim cmdUpdateRank As New SqlCommand("Update Customer20222 Set Rank = @p1 Where CustomerID = @p2", con)
+        For Each li As ListItem In DropDownList1.Items
+
+            With cmdTotalSales.Parameters
+                .Clear()
+                .AddWithValue("@p1", li.Value)
+            End With
+
+            Try
+                If con.State = ConnectionState.Closed Then con.Open()
+                TotalSales = cmdTotalSales.ExecuteScalar
+
+
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+
+            If TotalSales >= 5000 Then
+                Rank = 1
+            ElseIf TotalSales >= 2500 Then
+                Rank = 2
+            Else
+                Rank = 3
+            End If
+            With cmdUpdateRank.Parameters
+                .Clear()
+                .AddWithValue("@p1", Rank)
+                .AddWithValue("@p2", li.Value)
+            End With
+
+            Try
+                If con.State = ConnectionState.Closed Then con.Open()
+                cmdUpdateRank.ExecuteNonQuery()
+
+
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+        Next
+
+        con.Close()
+
+        MsgBox("Customer Ranks Updated!", vbExclamation, "Success")
+
+    End Sub
+
+    Protected Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        Dim Da As New SqlDataAdapter("Select CustomerID,CustomerName From Customer20222", con)
+        Dim Da2 As New SqlDataAdapter("Select TotalSales From Customer20222 Where CustomerID = @p1", con)
+        Dim cmdTotalSales As New SqlCommand("Select TotalSales From Customer20222 Where CustomerID = @p1", con)
+        For Each li As ListItem In DropDownList1.Items
+            With Da.SelectCommand.Parameters
+                .Clear()
+                .AddWithValue("@p1", li.Value)
+            End With
+
+            Try
+                If con.State = ConnectionState.Closed Then
+                    con.Open()
+                    ListBox1.Items.Add(cmdTotalSales.ExecuteScalar)
+                End If
+            Catch ex As Exception
+
+            End Try
+        Next
+        Dim temp As Decimal
+        For i As Integer = 0 To ListBox1.Items.Count - 1
+            For j As Integer = i + 1 To ListBox1.Items.Count - 1
+                If CDec(ListBox1.Items.Item(j).Text) <= CDec(
+                        ListBox1.Items.Item(i).Text) Then
+                    temp = CDec(ListBox1.Items.Item(j).Text)
+                    ListBox1.Items.Item(j).Text = ListBox1.Items.Item(i).Text
+                    ListBox1.Items.Item(i).Text = temp
+                End If
+            Next
+        Next
+
+        Dim rank As Integer = 1
+        Dim CmdUpdate As New SqlCommand("Update Customer20222 Set Rank = @p1 Where TotalSales = @p2", con)
+
+
+        For Each li As ListItem In ListBox1.Items
+
+            With CmdUpdate.Parameters
+                .Clear()
+                .AddWithValue("@p1", rank)
+                .AddWithValue("@p2", CDec(li.Text))
+            End With
+
+            Try
+                If con.State = ConnectionState.Closed Then
+                    con.Open()
+                    CmdUpdate.ExecuteNonQuery()
+
+                End If
+            Catch ex As Exception
+                Response.Write(ex.Message)
+            End Try
+            rank += 1
+        Next
+        con.Close()
+
+    End Sub
+End Class
